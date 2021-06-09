@@ -6,32 +6,44 @@ namespace AtelierPlawright
 {
     public class LuccaEstPresentSurWikipedia
     {
-        private IPage Page;
-        private IBrowser Browser;
-        
+        private IPage _page;
+        private IBrowser _browser;
+
 
         [Test]
         public async Task LuccaShouldHaveTheRightPostalCode()
         {
-            using var playwright = await Playwright.CreateAsync();
-            Browser = await playwright.Chromium.LaunchAsync();
-            Page = await Browser.NewPageAsync();
-            
-            // Open new page
-            await Page.GotoAsync("https://www.wikipedia.org/");
-            await Page.ClickAsync("text=Français");
-            await Page.ClickAsync("[placeholder=\"Rechercher dans Wikipédia\"]");
-            await Page.FillAsync("[placeholder=\"Rechercher dans Wikipédia\"]", "Lucca");
-            await Page.PressAsync("[placeholder=\"Rechercher dans Wikipédia\"]", "Enter");
-            await Page.ClickAsync("text=Lucques");
+            await InitBrowser();
 
-            var pageContent = await Page.ContentAsync();
-            
+            // Open new page
+            await _page.GotoAsync("https://www.wikipedia.org/");
+            await _page.ClickAsync("text=Français");
+            await _page.ClickAsync("[placeholder=\"Rechercher dans Wikipédia\"]");
+            await _page.FillAsync("[placeholder=\"Rechercher dans Wikipédia\"]", "Lucca");
+            await _page.PressAsync("[placeholder=\"Rechercher dans Wikipédia\"]", "Enter");
+            await _page.ClickAsync("text=Lucques");
+
+            var pageContent = await _page.ContentAsync();
+
             Assert.IsTrue(pageContent.Contains("55100"));
-            
-            await Browser.CloseAsync();
+
+            await CloseBrowser();
+        }
+
+        private async Task InitBrowser()
+        {
+            // J'aurai préféré passer par SetUp et TearDown mais impossible
+            // d'écrire des methodes de SetUP et TearDown qui soient asynchrones.
+            // Ce setup n'est pas l'idéal et je suis ouvert à mieux.
+            using var playwright = await Playwright.CreateAsync();
+            _browser = await playwright.Chromium.LaunchAsync();
+            _page = await _browser.NewPageAsync();
         }
         
-        
+        private async Task CloseBrowser()
+                 {
+                     await _browser.CloseAsync();
+                 }
+
     }
 }

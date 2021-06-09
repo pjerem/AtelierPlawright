@@ -5,6 +5,7 @@
 Installer Playwright CLI (possibilité d'utiliser dotnet tools, cf docs)
 ```
 npm i -g playwright-cli
+playwright install
 ```
 
 Cloner ce repository
