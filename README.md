@@ -2,10 +2,10 @@
 
 ## Setup rapide (copy-paste time)
 
-Installer Playwright CLI (possibilité d'utiliser dotnet tools, cf docs)
+Installer Playwright CLI 
 ```
-npm i -g playwright-cli
-playwright install
+dotnet tool install --global Microsoft.Playwright.CLI
+playwright.cmd install
 ```
 
 Cloner ce repository
