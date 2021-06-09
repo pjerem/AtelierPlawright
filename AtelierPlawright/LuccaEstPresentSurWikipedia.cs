@@ -13,7 +13,9 @@ namespace AtelierPlawright
         [Test]
         public async Task LuccaShouldHaveTheRightPostalCode()
         {
-            await InitBrowser();
+            using var playwright = await Playwright.CreateAsync();
+            _browser = await playwright.Chromium.LaunchAsync();
+            _page = await _browser.NewPageAsync();
 
             // Open new page
             await _page.GotoAsync("https://www.wikipedia.org/");
@@ -27,23 +29,7 @@ namespace AtelierPlawright
 
             Assert.IsTrue(pageContent.Contains("55100"));
 
-            await CloseBrowser();
+            await _browser.CloseAsync();
         }
-
-        private async Task InitBrowser()
-        {
-            // J'aurai préféré passer par SetUp et TearDown mais impossible
-            // d'écrire des methodes de SetUP et TearDown qui soient asynchrones.
-            // Ce setup n'est pas l'idéal et je suis ouvert à mieux.
-            using var playwright = await Playwright.CreateAsync();
-            _browser = await playwright.Chromium.LaunchAsync();
-            _page = await _browser.NewPageAsync();
-        }
-        
-        private async Task CloseBrowser()
-                 {
-                     await _browser.CloseAsync();
-                 }
-
     }
 }
